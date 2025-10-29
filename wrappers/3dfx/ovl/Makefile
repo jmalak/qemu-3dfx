@@ -3,7 +3,7 @@ WCC=$(WATCOM_PATH)/wcc386
 WLD=$(WATCOM_PATH)/wlink
 QEMU_SRC_DIR=../../../qemu-0
 INCLUDES=-I$(QEMU_SRC_DIR)/hw/3dfx -I../src
-CFLAGS=-zq -we -6s -ohtx -bd -fpi87
+CFLAGS=-zq -we -6s -ohtx -fpi87 -bt=none -x
 OUTDIR?=build
 
 all: glide2x.ovl
@@ -11,7 +11,9 @@ all: glide2x.ovl
 glide2x.ovl: glideovl.obj
 	@echo "  CFLAGS  $(CFLAGS)"
 	@echo "  WLD $@"
-	@$(WLD) @$(<:obj=lnk)
+	@$(WLD) format os2 le dll initg n glide2x.ovl EXP __DLLstart_ op de 'GLIDE2X.OVL',m,nocase,nod,q file {$<}
+	file glideovl.obj
+
 	@if [ -d ../$(OUTDIR) ]; then cp -v $@ ../$(OUTDIR); fi
 
 glideovl.obj: glideovl.c
